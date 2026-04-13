@@ -6,7 +6,7 @@
 - This is the the RedNotebook API systemd service for the RedNotebook mobile app companion client for Android, available at [
 rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile-android).
 - Based on FastAPI/Python, it reads and writes RedNotebook yyyy-mm.txt files, providing the API endpoints for the Android app.
-- Your RedNotebook text journal entries can reside on a shared mount, pointing to your desktop where the RedNotebook desktop app is installed. 
+- Your RedNotebook text journal entries can reside on a shared mount, pointing to your desktop where the RedNotebook desktop app is installed.
 - I am running the systemd service on a Orange Pi + a shared mount with my desktop, pointing to the RedNotebook `data` folder.
 - You can also set up the systemd service directly on your Linux desktop; in that case, no shared mount is needed.
 
@@ -20,13 +20,14 @@ rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile
 
 ## How to install
 
+- Take a backup of your RedNotebook journal entries, just in case.
 - Clone the repo on your Linux host. I am using Debian 13.
 - Edit the file rednotebook-api@.service to point to your RedNotebook text journal entries, change the following line in the file:
 
 ```
 Environment=REDNOTEBOOK_DIR=/my/path/rednotebook/data
 ```
- 
+
 - Set setup.sh as executable:
 
 ```
@@ -46,7 +47,7 @@ sudo systemctl status rednotebook-api@YOUR_USERNAME
 - Try it in your browser:
 
 ```
-curl http://localhost:8000/months 
+curl http://localhost:8000/months
 ```
 
 ## API endpoints examples:
