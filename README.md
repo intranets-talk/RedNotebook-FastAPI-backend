@@ -3,8 +3,8 @@
 
 ## What this is
 
-- This is the the RedNotebook API service for the RedNotebook mobile app companion client for Android, available at [
-rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile-android) - running as a systemd service.
+- This is the the RedNotebook API systemd service for the RedNotebook mobile app companion client for Android, available at [
+rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile-android).
 - Based on FastAPI/Python, it reads and writes RedNotebook yyyy-mm.txt files, providing the API endpoints for the Android app.
 - Your RedNotebook text journal entries can reside on a shared mount, pointing to your desktop where the RedNotebook desktop app is installed. 
 - I am running the systemd service on a Orange Pi + a shared mount with my desktop, pointing to the RedNotebook `data` folder.
