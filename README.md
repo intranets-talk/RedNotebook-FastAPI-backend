@@ -51,14 +51,21 @@ curl http://localhost:8000/months
 
 ## API endpoints examples:
 
+```
 GET/months                All months with entry counts
-GET/entries/2025/04       All entries for April 2025
-GET/entries/2025/04/16    Single day entry
-PUT/entries/2025/04/16    Create or update an entry
-DELETE/entries/2025/04/16 Delete an entry
-GET/search?q=day          Full-text search across all entries
 
-FastAPI also auto-generates interactive docs at http://localhost:8000/docs — great for testing before the app is built.
+GET/entries/2025/04       All entries for April 2025
+
+GET/entries/2025/04/16    Single day entry
+
+PUT/entries/2025/04/16    Create or update an entry
+
+DELETE/entries/2025/04/16 Delete an entry
+
+GET/search?q=day          Full-text search across all entries
+```
+
+- FastAPI also auto-generates interactive docs at http://localhost:8000/docs — great for testing before the app is built.
 
 Note: The API endpoints do not feature authentication. Exposing the API publicly to the Internet will make your journal entries available to anyone. Not a good idea.
 
