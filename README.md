@@ -52,17 +52,17 @@ curl http://localhost:8000/months
 ## API endpoints examples:
 
 ```
-GET/months                All months with entry counts
+GET /months                All months with entry counts
 
-GET/entries/2025/04       All entries for April 2025
+GET /entries/2025/04       All entries for April 2025
 
-GET/entries/2025/04/16    Single day entry
+GET /entries/2025/04/16    Single day entry
 
-PUT/entries/2025/04/16    Create or update an entry
+PUT /entries/2025/04/16    Create or update an entry
 
-DELETE/entries/2025/04/16 Delete an entry
+DELETE /entries/2025/04/16 Delete an entry
 
-GET/search?q=day          Full-text search across all entries
+GET /search?q=day          Full-text search across all entries
 ```
 
 - FastAPI also auto-generates interactive docs at http://localhost:8000/docs
