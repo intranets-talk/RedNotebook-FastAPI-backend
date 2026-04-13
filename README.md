@@ -65,7 +65,7 @@ DELETE/entries/2025/04/16 Delete an entry
 GET/search?q=day          Full-text search across all entries
 ```
 
-- FastAPI also auto-generates interactive docs at http://localhost:8000/docs — great for testing before the app is built.
+- FastAPI also auto-generates interactive docs at http://localhost:8000/docs
 
 Note: The API endpoints do not feature authentication. Exposing the API publicly to the Internet will make your journal entries available to anyone. Not a good idea.
 
