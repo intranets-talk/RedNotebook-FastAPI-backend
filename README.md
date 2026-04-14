@@ -28,7 +28,7 @@ rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile
 Environment=REDNOTEBOOK_DIR=/my/path/rednotebook/data
 ```
 
-- Set setup.sh as executable:
+- Make setup.sh executable:
 
 ```
 chmod +x setup.sh
@@ -66,10 +66,12 @@ DELETE /entries/2025/04/16 Delete an entry
 GET /search?q=day          Full-text search across all entries
 ```
 
-- FastAPI also auto-generates interactive docs at http://localhost:8000/docs
+FastAPI also auto-generates interactive docs at http://localhost:8000/docs
 
-Note: The API endpoints do not feature authentication. Exposing the API publicly to the Internet will make your journal entries available to anyone. Not a good idea.
+- Note: The API endpoints do not feature authentication. Exposing the API publicly to the Internet will make your journal entries available to anyone. Not a good idea.
 
 ## Contributing
 
-Feel free to submit a pull request for any improvements.
+- Can this REdNotebook FastAPI systemd service be improved? Of course, in many ways!
+- Ex: handle image attachments, add API endpoints for improved search, add authentication. 
+- Feel free to submit a pull request for any improvements.
