@@ -72,6 +72,6 @@ FastAPI also auto-generates interactive docs at http://localhost:8000/docs
 
 ## Contributing
 
-- Can this REdNotebook FastAPI systemd service be improved? Of course, in many ways!
-- Ex: handle image attachments, add API endpoints for improved search, add authentication. 
+- Can the RedNotebook FastAPI backend service be improved? Of course, in many ways!
+- Ex: handle image attachments, add API endpoints for improved search, add authentication.
 - Feel free to submit a pull request for any improvements.
