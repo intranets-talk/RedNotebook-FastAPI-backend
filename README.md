@@ -16,7 +16,7 @@ rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile
 - It installs Python: `sudo apt-get install -y python3 python3-venv python3-pip`
 - It adds Python dependencies: `fastapi, uvicorn,pyyaml, pydantic`
 - It sets up a systemd service running on port 8000: `rednotebook-api@${USER}`
-- Shows local IP so you can use it with the Android app.
+- Shows the local IP so you can use it with the Android app: `systemctl status rednotebook-api@${USER}`
 
 ## How to install
 
@@ -69,6 +69,10 @@ GET /search?q=day          Full-text search across all entries
 FastAPI also auto-generates interactive docs at http://localhost:8000/docs
 
 - Note: The API endpoints do not feature authentication. Exposing the API publicly to the Internet will make your journal entries available to anyone. Not a good idea.
+
+## Thanks to
+
+- [Jendrik Seipp](https://github.com/jendrikseipp) - creator of RedNotebook and contributors.
 
 ## Contributing
 
