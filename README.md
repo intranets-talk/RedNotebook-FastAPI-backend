@@ -96,6 +96,11 @@ FastAPI also auto-generates interactive docs at http://localhost:8000/docs
 
 ## Contributing
 
-- Can the RedNotebook FastAPI backend service be improved? Of course, in many ways!
-- Ex: add API endpoints for improved search, add authentication, add option to automatically insert the outside temperature, change the service into a Docker image.
+- Can the RedNotebook FastAPI backend service be improved? Of course, in many ways! Example:
+
+  - Add API endpoints for improved search;
+  - Add authentication;
+  - Add option to automatically insert the outside temperature;
+  - Change the service into a Docker image.
+
 - Feel free to submit a pull request for any improvements.
