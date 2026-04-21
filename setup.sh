@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup.sh — installs the RedNotebook API
+# setup.sh — installs the RedNotebook API on Debian
 # Run as your normal user (not root); sudo is called where needed.
 set -e
 

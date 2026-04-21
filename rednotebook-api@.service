@@ -9,7 +9,8 @@ WorkingDirectory=/opt/rednotebook-api
 ExecStart=/opt/rednotebook-api/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
 Restart=on-failure
 RestartSec=5
-# change line below to point to your rednotebook data folder
-Environment=REDNOTEBOOK_DIR=/path/to/rednotebook/data
+Environment=REDNOTEBOOK_DIR=/root/rednotebook
+Environment="IMMICH_URL=https://your-immich-instance-url"
+Environment="IMMICH_API_KEY=your-immich-api-key-here"
 [Install]
 WantedBy=multi-user.target
