@@ -41,7 +41,7 @@ IMMICH_API_KEY=your-immich-api-key" # optional - if you are using Immich
 ```
 
 - Optionally, change the port number;
-- Make setup.sh executable and run it as your normal user (not root); sudo is called where needed:
+- Make `setup.sh` executable and run it as your normal user (not root); sudo is called where needed:
 
 ```
 chmod +x setup.sh
@@ -57,7 +57,7 @@ sudo systemctl status rednotebook-api@YOUR_USERNAME
 - Try it in your browser:
 
 ```
-curl http://localhost:8000/months
+curl http://fastapi-ip-address:8000/months
 ```
 
 - *For both RedNotebook desktop and Android app*: if you are using Immich, you can use the following format to embed images in your journal entries ():
@@ -68,7 +68,7 @@ curl http://localhost:8000/months
 
 `https://IMMICH-IP/photos/ec96511e-957a-4954-93r9-ae4543e0fcb8`
 
-* I know this is not "elegant" or "ideal", but personally I'll take this rather than nothing :) Improvements welcomed.
+* I know this is not "elegant" or "ideal", but personally I'll take this rather than nothing, improvements welcomed.
 
 ## API endpoints examples:
 
