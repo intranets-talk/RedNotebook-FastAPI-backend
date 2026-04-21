@@ -104,3 +104,4 @@ FastAPI also auto-generates interactive docs at http://localhost:8000/docs
   - Change the service into a Docker image.
 
 - Feel free to submit a pull request for any improvements.
+- MIT Licensed.
