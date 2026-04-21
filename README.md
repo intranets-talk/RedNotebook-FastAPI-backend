@@ -35,9 +35,9 @@ rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile
 - Edit the file `rednotebook-api@.service` to point to your RedNotebook text journal entries (shared mount or local) - and add the Immich URL and API key if you want to embed Immich photos in your journal entries - change the following lines:
 
 ```
-Environment=REDNOTEBOOK_DIR=/my/path/rednotebook/data // required - path to rednotebook text files
-IMMICH_URL=https://your-immich-host // optional - if you are using Immich
-IMMICH_API_KEY=your-immich-api-key" // optional - if you are using Immich
+Environment=REDNOTEBOOK_DIR=/my/path/rednotebook/data # required - path to rednotebook text files
+IMMICH_URL=https://your-immich-host # optional - if you are using Immich
+IMMICH_API_KEY=your-immich-api-key" # optional - if you are using Immich
 ```
 
 - Optionally, change the port number;
