@@ -2,7 +2,7 @@
 RedNotebook API — FastAPI backend
 Reads and writes RedNotebook yyyy-mm.txt files (YAML format).
 """
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pathlib import Path
@@ -11,6 +11,7 @@ import re
 from datetime import date, datetime
 from typing import Optional
 import os
+import uuid
 import httpx
 from fastapi.responses import FileResponse, Response
 from PIL import Image
@@ -19,6 +20,10 @@ import io
 # ── Config ────────────────────────────────────────────────────────────────────
 # Set REDNOTEBOOK_DIR env var, or edit this default path
 JOURNAL_DIR = Path(os.getenv("REDNOTEBOOK_DIR", Path.home() / ".rednotebook" / "data"))
+ATTACHMENTS_DIR = Path(os.getenv("ATTACHMENTS_DIR", str(JOURNAL_DIR / "attachments")))
+
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
+MAX_IMAGE_BYTES = 40 * 1024 * 1024  # 40 MB
 
 app = FastAPI(
     title="RedNotebook API",
@@ -28,7 +33,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # need to tighten this for auth later
+    allow_origins=["*"],  # tighten this for auth later
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
@@ -202,6 +207,125 @@ def search_entries(q: str = Query(..., min_length=1)):
                 results.append(build_day_entry(year, month, day, day_data))
     return results
 
+# ── Attachment helpers ────────────────────────────────────────────────────────
+
+def attachment_dir(date: str) -> Path:
+    """Returns the attachments folder for a given date string YYYY-MM-DD."""
+    return ATTACHMENTS_DIR / date
+
+
+def attachment_token(filename: str) -> str:
+    """Returns the portable token stored in entry text: [attachment:filename]"""
+    return f"[attachment:{filename}]"
+
+
+@app.get("/attachments/file/{filename}", tags=["attachments"])
+def get_root_attachment(filename: str):
+    """Serve an attachment from the root attachments folder (desktop-created files)."""
+    if ".." in filename or "/" in filename:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    path = ATTACHMENTS_DIR / filename
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Attachment not found")
+    return FileResponse(path)
+
+# ── Attachment routes ─────────────────────────────────────────────────────────
+
+@app.get("/attachments/{date}", tags=["attachments"])
+def list_attachments(date: str):
+    """List all attachments for a given date (YYYY-MM-DD)."""
+    folder = attachment_dir(date)
+    if not folder.exists():
+        return []
+    files = [
+        {"filename": f.name, "url": f"/attachments/{date}/{f.name}"}
+        for f in sorted(folder.iterdir())
+        if f.is_file()
+    ]
+    return files
+
+
+@app.post("/attachments/{date}", tags=["attachments"])
+async def upload_attachment(date: str, file: UploadFile = File(...)):
+    """Upload an image attachment for a given date (YYYY-MM-DD)."""
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported file type: {file.content_type}. Allowed: jpeg, png, gif, webp"
+        )
+
+    # Read and check size
+    data = await file.read()
+    if len(data) > MAX_IMAGE_BYTES:
+        raise HTTPException(status_code=413, detail="File too large. Max 20 MB.")
+
+    # Generate a unique filename preserving the extension
+    ext = Path(file.filename).suffix.lower() if file.filename else ".jpg"
+    filename = f"{uuid.uuid4().hex[:12]}{ext}"
+
+    folder = attachment_dir(date)
+    folder.mkdir(parents=True, exist_ok=True)
+
+# Resize to 300px wide, preserving aspect ratio
+    img = Image.open(io.BytesIO(data))
+# Preserve EXIF orientation
+    try:
+        from PIL.ExifTags import TAGS
+        exif = img._getexif()
+        if exif:
+            for tag, value in exif.items():
+                if TAGS.get(tag) == "Orientation":
+                    if value == 3: img = img.rotate(180, expand=True)
+                    elif value == 6: img = img.rotate(270, expand=True)
+                    elif value == 8: img = img.rotate(90, expand=True)
+                    break
+    except Exception:
+        pass
+    if img.width > 300:
+        new_h = int(img.height * 300 / img.width)
+        img = img.resize((300, new_h), Image.LANCZOS)
+
+    buf = io.BytesIO()
+    fmt = "JPEG" if ext.lower() in (".jpg", ".jpeg") else ext[1:].upper()
+    # Convert RGBA/P to RGB for JPEG compatibility
+    if fmt == "JPEG" and img.mode in ("RGBA", "P", "LA"):
+        img = img.convert("RGB")
+    img.save(buf, format=fmt, quality=85)
+
+    return {
+        "filename": filename,
+        "url": f"/attachments/{date}/{filename}",
+        "token": attachment_token(filename),
+        "size": len(data),
+    }
+
+@app.get("/attachments/{date}/{filename}", tags=["attachments"])
+def get_attachment(date: str, filename: str):
+    """Serve an attachment file."""
+    # Security: prevent path traversal
+    if ".." in date or ".." in filename or "/" in filename:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    path = attachment_dir(date) / filename
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Attachment not found")
+    return FileResponse(path)
+
+
+@app.delete("/attachments/{date}/{filename}", tags=["attachments"])
+def delete_attachment(date: str, filename: str):
+    """Delete an attachment file."""
+    if ".." in date or ".." in filename or "/" in filename:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    path = attachment_dir(date) / filename
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Attachment not found")
+    path.unlink()
+    # Remove folder if empty
+    folder = attachment_dir(date)
+    if folder.exists() and not any(folder.iterdir()):
+        folder.rmdir()
+    return {"deleted": True, "filename": filename}
+
 # ── Immich proxy ──────────────────────────────────────────────────────────────
 
 IMMICH_URL = os.getenv("IMMICH_URL", "https://your-immich-instance-url-or-ip")
@@ -211,7 +335,7 @@ IMMICH_API_KEY = os.getenv("IMMICH_API_KEY", "your-immich-api-key")
 async def proxy_immich_image(asset_id: str, ext: str, size: int = 280):
     """
     Proxy an Immich asset, resized to `size` px wide (proportional height).
-    Usage in RedNotebook: [""http://fastapi-ip-address:8000/immich/ASSET_ID"".jpg]
+    Usage in RedNotebook: [""http://YOUR_IP:8000/immich/ASSET_ID"".jpg]
     """
     if not IMMICH_API_KEY:
         raise HTTPException(status_code=503, detail="IMMICH_API_KEY not configured")
@@ -266,7 +390,7 @@ async def proxy_immich_image(asset_id: str, ext: str, size: int = 280):
     if fmt == "JPG":
         fmt = "JPEG"
     buf = io.BytesIO()
-    img.save(buf, format=fmt, quality=95)
+    img.save(buf, format=fmt, quality=85)
     buf.seek(0)
 
     return Response(

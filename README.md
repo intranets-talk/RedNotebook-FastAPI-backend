@@ -16,7 +16,7 @@ rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile
 
 - *API*: provides a CRUD FastAPI backend for the companion [
 rednotebook-mobile-android](https://github.com/intranets-talk/rednotebook-mobile-android) app. API endpoints listed below.
-- *Embed Immich photos*: ability to embed Immich photos via the FastAPI service, acting as proxy — embed images in RedNotebook desktop and Android app, using a URL link format like: `[""http://YOUR_FASTAPI_IP:8000/immich/ASSET_ID"".jpg]`. Note that the file extension in URL is a dummy for RedNotebook compatibility — actual format is detected from Immich response headers.
+- *Embed Immich photos*: ability to embed Immich photos with the FastAPI service acting as proxy — embed images in RedNotebook desktop and Android app, using a URL link format like: `[""http://YOUR_FASTAPI_IP:8000/immich/ASSET_ID"".jpg]`. Note that the file extension in URL is a dummy for RedNotebook compatibility — actual format is detected from Immich response headers.
 
 * Note: *Images only*: this will only work for images, videos will not work. Images are resized to 300px wide and EXIF orientation is preserved using Pillow.
 
@@ -68,7 +68,7 @@ curl http://fastapi-ip-address:8000/months
 
 `https://IMMICH-IP/photos/ec96511e-957a-4954-93r9-ae4543e0fcb8`
 
-* I know this is not "elegant" or "ideal", but personally I'll take this rather than nothing, improvements welcomed.
+* I know this is not "elegant" or "ideal", personally I'll take this rather than nothing, improvements welcomed.
 
 ## API endpoints examples:
 
@@ -100,7 +100,6 @@ FastAPI also auto-generates interactive docs at http://localhost:8000/docs
 
   - Add API endpoints for improved search;
   - Add authentication;
-  - Add option to automatically insert the outside temperature;
   - Change the service into a Docker image.
 
 - Feel free to submit a pull request for any improvements.

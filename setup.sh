@@ -36,7 +36,7 @@ echo "  Logs:     journalctl -u $SERVICE_NAME -f"
 echo "  API docs: http://localhost:$PORT/docs"
 echo ""
 
-# Show local IP so you know what to put in the Android app
+# Show local IP for usage in the Android app
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 echo "  Android app URL: http://$LOCAL_IP:$PORT"
 echo ""
